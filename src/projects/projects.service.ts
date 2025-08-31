@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
 import { Repository } from 'typeorm';
-import { Client } from 'src/clients/entities/client.entity';
+import { Client } from '../clients/entities/client.entity';
 import { CreateProjectDto } from './dtos/create.dto';
 import { UpdateProjectDto } from './dtos/update.dto';
+import { Role } from '../constants/roles';
 
 @Injectable()
 export class ProjectsService {
@@ -34,8 +35,15 @@ export class ProjectsService {
     return this.projectsRepository.save(project);
   }
 
-  findAll(): Promise<Project[]> {
-    return this.projectsRepository.find({ relations: ['client'] });
+  findAllForUser(user: Client): Promise<Project[]> {
+    if (user.role.includes(Role.Admin)) {
+      return this.projectsRepository.find({ relations: ['client'] });
+    }
+
+    return this.projectsRepository.find({
+      where: { client: { id: user.id } },
+      relations: ['client'],
+    });
   }
 
   async findOne(id: number): Promise<Project> {
