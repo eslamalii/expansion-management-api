@@ -1,5 +1,5 @@
-import { Clients } from '../../clients/entities/client.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Client } from '../../clients/entities/client.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum ProjectStatus {
   ACTIVE = 'active',
@@ -28,6 +28,6 @@ export class Project {
   })
   status: ProjectStatus;
 
-  @ManyToMany(() => Clients, (client) => client.projects)
-  client: Clients;
+  @ManyToOne(() => Client, (client) => client.projects)
+  client: Client;
 }
