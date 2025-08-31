@@ -2,7 +2,7 @@ import { Project } from '../../projects/entities/project.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Clients {
+export class Client {
   @PrimaryGeneratedColumn()
   id: number;
 
