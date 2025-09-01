@@ -12,7 +12,7 @@ export class Client {
   @Column({ unique: true })
   contact_email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({ default: 'client' })

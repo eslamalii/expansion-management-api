@@ -48,8 +48,10 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
 
+    //select password field explicitly
     const client = await this.clientRepository.findOne({
       where: { contact_email: email },
+      select: ['id', 'contact_email', 'password', 'role'],
     });
 
     if (!client) {

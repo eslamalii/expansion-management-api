@@ -6,11 +6,13 @@ import { MatchesModule } from './matches/matches.module';
 import { DocumentsModule } from './documents/documents.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { NotificationsModule } from './notifications/notifications.module';
-import { ScheduleModule } from './schedule/schedule.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AutomationModule } from './automation/automation.module';
+import { BullModule } from '@nestjs/bullmq';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -27,9 +29,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
-        synchronize: true,
-        retryAttempts: 10,
-        retryDelay: 3000,
+        synchronize: true, //false in production
       }),
     }),
 
@@ -42,18 +42,29 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
     }),
 
+    // --- BullMQ Module ---
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: parseInt(configService.get<string>('REDIS_PORT') ?? '6379', 10),
+        },
+      }),
+    }),
+
     // --- Application Modules ---
     ClientsModule,
-    ProjectsModule,
     VendorsModule,
+    ProjectsModule,
     MatchesModule,
     DocumentsModule,
     AnalyticsModule,
     NotificationsModule,
-    ScheduleModule,
     AuthModule,
+    AutomationModule,
+    EmailModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
