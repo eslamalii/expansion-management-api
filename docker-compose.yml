@@ -1,49 +1,68 @@
+# This file is used to run the database services (MySQL, MongoDB, Redis)
+# for local development. The NestJS server should be run separately with `npm run dev`.
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: project-matcher-api
-    ports:
-      - '${APP_PORT}:${APP_PORT}'
-    depends_on:
-      - mysql_db
-      - mongo_db
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    env_file:
-      - .env
-    command: npm run start:dev
-
-  # MySQL Database
   mysql_db:
     image: mysql:8.0
     container_name: mysql_db
     restart: always
     ports:
-      - '${DB_PORT}:3306'
+      - '3306:3306'
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: expansion_management
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      # Note: -prootpassword has no space. This is the correct syntax.
+      test:
+        [
+          'CMD',
+          'mysqladmin',
+          'ping',
+          '-h',
+          'localhost',
+          '-u',
+          'root',
+          '-prootpassword',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  # MongoDB Database
   mongo_db:
     image: mongo:latest
     container_name: mongo_db
     restart: always
     ports:
-      - '${MONGO_PORT}:27017'
+      - '27017:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_data:
   mongo_data:
+  redis_data:
