@@ -132,6 +132,7 @@ CREATE TABLE `vendor` (
     `services_offered` JSON NOT NULL,
     `rating` DECIMAL(2, 1) NOT NULL,
     `response_sla_hours` INT NOT NULL,
+    `status` ENUM('active', 'flagged', 'suspended') NOT NULL DEFAULT 'active',
     PRIMARY KEY (`id`)
 );
 
