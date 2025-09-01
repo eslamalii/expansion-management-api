@@ -24,6 +24,7 @@ CREATE TABLE `vendor` (
     `services_offered` JSON NOT NULL,     
     `rating` DECIMAL(2, 1) NOT NULL,
     `response_sla_hours` INT NOT NULL,
+    `status` ENUM('active', 'flagged', 'suspended') NOT NULL DEFAULT 'active',
     PRIMARY KEY (`id`)
 );
 
@@ -66,19 +67,19 @@ INSERT INTO `client` (`company_name`, `contact_email`, `password`, `role`) VALUE
 ('Enterprise Plus', 'business@enterpriseplus.com', @hashed_password, 'client');
 
 -- Insert Vendors
-INSERT INTO `vendor` (`name`, `countries_supported`, `services_offered`, `rating`, `response_sla_hours`) VALUES
-('Digital Marketing Pro', '["USA", "Canada", "UK"]', '["SEO", "PPC", "Social Media Marketing", "Content Marketing"]', 4.8, 12),
-('WebDev Masters', '["USA", "Germany", "Netherlands", "UK"]', '["Web Development", "Mobile Apps", "API Integration", "E-commerce"]', 4.9, 8),
-('CloudTech Solutions', '["USA", "UK", "Germany", "France"]', '["Cloud Migration", "AWS Services", "DevOps", "Cybersecurity"]', 4.7, 16),
-('Design Studio Elite', '["USA", "Canada", "UK", "Australia"]', '["UI/UX Design", "Branding", "Graphic Design", "Web Design"]', 5.0, 6),
-('Euro Logistics Network', '["Germany", "France", "Spain", "Italy"]', '["Shipping", "Warehousing", "Supply Chain", "Last Mile Delivery"]', 4.6, 24),
-('Asia Pacific Tech', '["Japan", "South Korea", "Singapore", "Australia"]', '["Mobile Apps", "AI/ML", "Blockchain", "IoT Solutions"]', 4.8, 10),
-('Legal Advisors Global', '["USA", "UK", "Canada"]', '["Legal Consulting", "Contract Review", "IP Protection", "Compliance"]', 4.9, 48),
-('Translation Hub', '["USA", "Germany", "Japan", "Spain", "France", "China"]', '["Translation", "Localization", "Cultural Consulting", "Content Adaptation"]', 4.8, 20),
-('Research & Analytics Co', '["USA", "UK", "Germany", "Canada"]', '["Market Research", "Data Analytics", "Business Intelligence", "Competitive Analysis"]', 4.7, 72),
-('Rapid Development Team', '["India", "Philippines", "Ukraine", "Poland"]', '["Web Development", "Mobile Apps", "Software Testing", "Technical Support"]', 4.6, 18),
-('Nordic Solutions', '["Sweden", "Norway", "Denmark", "Finland"]', '["Software Development", "Green Tech", "SaaS Solutions", "Consulting"]', 4.8, 14),
-('MENA Tech Partners', '["UAE", "Saudi Arabia", "Egypt", "Jordan"]', '["Digital Transformation", "Mobile Apps", "E-commerce", "Cloud Services"]', 4.7, 22);
+INSERT INTO `vendor` (`name`, `countries_supported`, `services_offered`, `rating`, `response_sla_hours`, `status`) VALUES
+('Digital Marketing Pro', '["USA", "Canada", "UK"]', '["SEO", "PPC", "Social Media Marketing", "Content Marketing"]', 4.8, 12, 'active'),
+('WebDev Masters', '["USA", "Germany", "Netherlands", "UK"]', '["Web Development", "Mobile Apps", "API Integration", "E-commerce"]', 4.9, 8, "active"),
+('CloudTech Solutions', '["USA", "UK", "Germany", "France"]', '["Cloud Migration", "AWS Services", "DevOps", "Cybersecurity"]', 4.7, 16, "active"),
+('Design Studio Elite', '["USA", "Canada", "UK", "Australia"]', '["UI/UX Design", "Branding", "Graphic Design", "Web Design"]', 5.0, 6,"active"),
+('Euro Logistics Network', '["Germany", "France", "Spain", "Italy"]', '["Shipping", "Warehousing", "Supply Chain", "Last Mile Delivery"]', 4.6, 24, 'active'),
+('Asia Pacific Tech', '["Japan", "South Korea", "Singapore", "Australia"]', '["Mobile Apps", "AI/ML", "Blockchain", "IoT Solutions"]', 4.8, 10, "active"),
+('Legal Advisors Global', '["USA", "UK", "Canada"]', '["Legal Consulting", "Contract Review", "IP Protection", "Compliance"]', 4.9, 48, "active"),
+('Translation Hub', '["USA", "Germany", "Japan", "Spain", "France", "China"]', '["Translation", "Localization", "Cultural Consulting", "Content Adaptation"]', 4.8, 20,"active"),
+('Research & Analytics Co', '["USA", "UK", "Germany", "Canada"]', '["Market Research", "Data Analytics", "Business Intelligence", "Competitive Analysis"]', 4.7, 72,"active"),
+('Rapid Development Team', '["India", "Philippines", "Ukraine", "Poland"]', '["Web Development", "Mobile Apps", "Software Testing", "Technical Support"]', 4.6, 18,"active"),
+('Nordic Solutions', '["Sweden", "Norway", "Denmark", "Finland"]', '["Software Development", "Green Tech", "SaaS Solutions", "Consulting"]', 4.8, 14,"active"),
+('MENA Tech Partners', '["UAE", "Saudi Arabia", "Egypt", "Jordan"]', '["Digital Transformation", "Mobile Apps", "E-commerce", "Cloud Services"]', 4.7, 22,"active");
 
 
 -- Insert Projects

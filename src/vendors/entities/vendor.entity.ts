@@ -1,6 +1,12 @@
 import { Match } from '../../matches/entities/match.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum VendorStatus {
+  ACTIVE = 'active',
+  FLAGGED = 'flagged',
+  SUSPENDED = 'suspended',
+}
+
 @Entity()
 export class Vendor {
   @PrimaryGeneratedColumn()
@@ -20,6 +26,13 @@ export class Vendor {
 
   @Column()
   response_sla_hours: number;
+
+  @Column({
+    type: 'enum',
+    enum: VendorStatus,
+    default: VendorStatus.ACTIVE,
+  })
+  status: VendorStatus;
 
   @OneToMany(() => Match, (match) => match.vendor)
   matches: Match[];

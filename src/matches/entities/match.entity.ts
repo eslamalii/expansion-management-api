@@ -8,6 +8,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+export enum MatchStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+}
+
 @Entity()
 export class Match {
   @PrimaryGeneratedColumn()
@@ -15,6 +21,13 @@ export class Match {
 
   @Column('decimal', { precision: 5, scale: 2 })
   score: number;
+
+  @Column({
+    type: 'enum',
+    enum: MatchStatus,
+    default: MatchStatus.PENDING,
+  })
+  status: MatchStatus;
 
   @ManyToOne(() => Project, (project) => project.matches, {
     onDelete: 'CASCADE',

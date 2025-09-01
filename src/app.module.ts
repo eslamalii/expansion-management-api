@@ -17,7 +17,7 @@ import { EmailModule } from './email/email.module';
 @Module({
   imports: [
     // --- Database Connection: MySQL (TypeORM) ---
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
