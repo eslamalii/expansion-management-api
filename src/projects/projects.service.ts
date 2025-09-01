@@ -42,7 +42,6 @@ export class ProjectsService {
 
     return this.projectsRepository.find({
       where: { client: { id: user.id } },
-      relations: ['client'],
     });
   }
 

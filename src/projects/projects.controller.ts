@@ -27,6 +27,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
+  @Roles(Role.Client)
   create(@Body() createProjectDto: CreateProjectDto, @Req() req: Request) {
     const user = req.user as Client;
 
@@ -42,12 +43,14 @@ export class ProjectsController {
   }
 
   @Get()
+  @Roles(Role.Client)
   findAll(@Req() req: Request) {
     const user = req.user as Client;
     return this.projectsService.findAllForUser(user);
   }
 
   @Get(':id')
+  @Roles(Role.Client)
   async findOne(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const user = req.user as Client;
 
@@ -61,6 +64,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
+  @Roles(Role.Client)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProjectDto: UpdateProjectDto,

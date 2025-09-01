@@ -83,6 +83,7 @@ Follow these steps to get the development environment up and running on your loc
 4.  **Start the Development Environment** This is the main command to start everything. It will launch the Docker containers for the databases, wait for them to be ready, seed the initial data, and then start the NestJS server.
 
     ```
+    npm run dev:reset
     npm run dev
 
     ```
