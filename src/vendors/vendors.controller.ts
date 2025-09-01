@@ -34,7 +34,7 @@ export class VendorsController {
   }
 
   @Get(':id')
-  findOne(@Body('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.vendorsService.findOne(id);
   }
 

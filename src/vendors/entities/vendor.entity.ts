@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Match } from '../../matches/entities/match.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Vendor {
@@ -8,10 +9,10 @@ export class Vendor {
   @Column()
   name: string;
 
-  @Column('simple-array')
+  @Column('json')
   countries_supported: string[];
 
-  @Column('simple-array')
+  @Column('json')
   services_offered: string[];
 
   @Column('decimal', { precision: 2, scale: 1 })
@@ -19,4 +20,7 @@ export class Vendor {
 
   @Column()
   response_sla_hours: number;
+
+  @OneToMany(() => Match, (match) => match.vendor)
+  matches: Match[];
 }
