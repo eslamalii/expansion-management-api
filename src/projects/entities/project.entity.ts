@@ -1,5 +1,12 @@
+import { Match } from '../../matches/entities/match.entity';
 import { Client } from '../../clients/entities/client.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum ProjectStatus {
   ACTIVE = 'active',
@@ -30,4 +37,7 @@ export class Project {
 
   @ManyToOne(() => Client, (client) => client.projects)
   client: Client;
+
+  @OneToMany(() => Match, (match) => match.project)
+  matches: Match[];
 }
