@@ -29,11 +29,13 @@ export class VendorsController {
   }
 
   @Get()
+  @Roles(Role.Admin)
   findAll() {
     return this.vendorsService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.Admin)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.vendorsService.findOne(id);
   }

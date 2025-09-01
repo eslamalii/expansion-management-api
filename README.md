@@ -1,98 +1,231 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Table of Contents
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+1.  [Project Setup](https://www.google.com/search?q=%23project-setup 'null')
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+2.  [Development Workflow](https://www.google.com/search?q=%23development-workflow 'null')
 
-## Description
+3.  [Database Schema](https://www.google.com/search?q=%23database-schema 'null')
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+4.  [API Endpoint Reference](https://www.google.com/search?q=%23api-endpoint-reference 'null')
 
-## Project setup
+## Project Setup
 
-```bash
-$ npm install
+Follow these steps to get the development environment up and running on your local machine.
+
+### Installation Steps
+
+1.  **Clone the Repository**
+
+    ```
+    git clone git@github.com:eslamalii/expansion-management-api.git
+    cd expansion-management-api
+
+    ```
+
+2.  **Install Dependencies**
+
+    ```
+    npm install
+
+    ```
+
+3.  **Configure Environment Variables** Copy the example environment file to create your local configuration.
+
+    ```
+    cp .env.example .env
+
+    ```
+
+    Now, open the `.env` file and fill in the required values. For local development, the database hosts should be set to `localhost`. You will need to sign up for a free account at [Mailtrap.io](https://mailtrap.io 'null') to get your SMTP credentials for testing emails.
+
+    **Example `.env` configuration:**
+
+    ```
+    #Application
+    APP_PORT=3000
+
+    #JWT Authentication
+    JWT_SECRET=your-super-secret-key
+    JWT_EXPIRATION=3600s
+
+    #MySQL Database
+    DB_HOST=localhost
+    DB_PORT=3306
+    DB_USERNAME=user
+    DB_PASSWORD=password
+    DB_DATABASE=expansion_management
+    DB_ROOT_PASSWORD=rootpassword
+
+    #MongoDB Database
+    MONGO_HOST=localhost
+    MONGO_PORT=27017
+    MONGO_USER=mongoadmin
+    MONGO_PASSWORD=secret
+    MONGO_DB_NAME=expansion_management
+    MONGODB_URI=mongodb://mongoadmin:secret@localhost:27017/expansion_management?authSource=admin
+
+
+    #Redis for BullMQ
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+
+    #SMTP for Email Notifications
+    EMAIL_PROVIDER=nodemailer
+    SMTP_HOST=sandbox.smtp.mailtrap.io
+    SMTP_PORT=587
+    SMTP_USER=<SMTP_USER>
+    SMTP_PASS=<>SMTP_PASS>
+    SMTP_FROM_EMAIL="<from@example.com>"
+
+
+    ```
+
+4.  **Start the Development Environment** This is the main command to start everything. It will launch the Docker containers for the databases, wait for them to be ready, seed the initial data, and then start the NestJS server.
+
+    ```
+    npm run dev
+
+    ```
+
+    Your server should now be running on `http://localhost:3000`.
+
+## Development Workflow
+
+This project uses a hybrid development model: the NestJS server runs locally for fast hot-reloading, while the databases (MySQL, MongoDB, Redis) run as stable services in Docker. The `npm` scripts are designed to manage this workflow seamlessly.
+
+### Key NPM Scripts
+
+- **`npm run dev`** This is your primary command for daily development. It starts the database containers (if they aren't already running), waits for them to be ready, and then starts the NestJS server in watch mode.
+
+- **`npm run dev:reset`** Use this command to completely reset your environment. It will stop and delete the database containers and their data, then run the full `dev` initialization sequence, including re-seeding the database. This is useful when you need a clean slate.
+
+- **`npm run db:down`** This command gracefully stops and removes the database containers. Your data will be preserved in Docker volumes.
+
+- **`npm run db:clean`** This is a destructive command that stops the containers and **deletes their associated data volumes**. Use this when you want to completely wipe the databases.
+
+## Database Schema
+
+The database schema is defined by the TypeORM entities (`src/**/*.entity.ts`) and is automatically created and synchronized when the application starts (`synchronize: true`). Below is a reference of the SQL schema generated by the entities.
+
+#### `client` Table
+
+```
+CREATE TABLE `client` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `company_name` VARCHAR(255) NOT NULL UNIQUE,
+    `contact_email` VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `role` VARCHAR(255) NOT NULL DEFAULT 'client',
+    PRIMARY KEY (`id`)
+);
+
 ```
 
-## Compile and run the project
+#### `vendor` Table
 
-```bash
-# development
-$ npm run start
+```
+CREATE TABLE `vendor` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `countries_supported` JSON NOT NULL,
+    `services_offered` JSON NOT NULL,
+    `rating` DECIMAL(2, 1) NOT NULL,
+    `response_sla_hours` INT NOT NULL,
+    PRIMARY KEY (`id`)
+);
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Run tests
+#### `project` Table
 
-```bash
-# unit tests
-$ npm run test
+```
+CREATE TABLE `project` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `country` VARCHAR(255) NOT NULL,
+    `services_needed` TEXT NOT NULL,
+    `budget` DECIMAL(10, 2) NOT NULL,
+    `status` ENUM('active', 'completed', 'cancelled') NOT NULL DEFAULT 'active',
+    `clientId` INT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`clientId`) REFERENCES `client`(`id`)
+);
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Deployment
+#### `match` Table
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```
+CREATE TABLE `match` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `score` DECIMAL(5, 2) NOT NULL,
+    `create_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    `projectId` INT NULL,
+    `vendorId` INT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`projectId`) REFERENCES `project`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`vendorId`) REFERENCES `vendor`(`id`) ON DELETE CASCADE
+);
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## API Endpoint Reference
 
-## Resources
+A complete and interactive list of all endpoints is available in the Postman collection.
 
-Check out a few resources that may come in handy when working with NestJS:
+[Complete API Documentation](https://documenter.getpostman.com/view/48052721/2sB3HhthtL)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Public / Authentication
 
-## Support
+- `POST /auth/register`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- `POST /auth/login`
 
-## Stay in touch
+### Clients (Role: `admin`)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `GET /clients`
 
-## License
+- `GET /clients/:id`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- `PATCH /clients/:id`
+
+- `DELETE /clients/:id`
+
+### Projects
+
+- `POST /projects`
+
+- `GET /projects`
+
+- `GET /projects/:id`
+
+- `PATCH /projects/:id`
+
+- `DELETE /projects/:id` `Admin`
+
+### Vendors (Role: `admin` )
+
+- `POST /vendors`
+
+- `GET /vendors`
+
+- `GET /vendors/:id`
+
+- `PATCH /vendors/:id`
+
+- `DELETE /vendors/:id`
+
+### Documents (MongoDB) (Role: `client` or `admin`)
+
+- `POST /documents`
+
+- `GET /documents`
+
+### Matching Engine (Role: `client` or `admin`)
+
+- `GET /matches/project/:projectId`
+
+- `POST /matches/project/:projectId/rebuild`
+
+### Analytics (Role: `admin` only)
+
+- `GET /analytics/top-vendors`
